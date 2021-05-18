@@ -10,7 +10,7 @@ function CreatePasswordComponent() {
   const [password, setPassword] = React.useState('')
   const [username, setUsername] = React.useState('')
   const [title, setTitle] = React.useState('')
-  const newPassword = React.useState({ title, username, password })
+  // const newPassword = React.useState({ title, username, password })
 
   async function requestAccount() {
     await window.ethereum.request({ method: 'eth_requestAccounts' })

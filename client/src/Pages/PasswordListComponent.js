@@ -6,59 +6,50 @@ function PasswordListComponent() {
   // const contractAddress = process.env.REACT_APP_CONTRACTADDRESS
   // console.log(process.env)
   const contractAddress = '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0'
-  const [password, setPassword] = React.useState('')
-  const [passwords, setPasswords] = React.useState([
-    { id: 1, title: 'Facebook', username: 'bla@blub.de', password: 'Flasche1' },
-    { id: 2, title: 'Instagram', username: 'bla@blub.de', password: 'Fl1' },
-    { id: 3, title: 'LinkedIn', username: 'bla@blub.de', password: 'Flasche2' },
-  ])
-  const [visibility, setVisibility] = React.useState()
-  const [buttonText, setButtonText] = React.useState('Show Password')
-  const passwordList = []
 
+  const [visibility, setVisibility] = React.useState()
+  const [refresh, setRefresh] = React.useState(0)
+  const [entries, setEntries] = React.useState([])
   function changeVisibility(id) {
     visibility === id ? setVisibility(null) : setVisibility(id)
   }
 
-  async function requestAccount() {
-    await window.ethereum.request({ method: 'eth_requestAccounts' })
-    console.log('called requestAccount')
-  }
-
   async function fetchPasswords() {
-    console.log('fetch pw called')
     if (typeof window.ethereum !== 'undefined') {
       const provider = new ethers.providers.Web3Provider(window.ethereum)
-      console.log({ provider })
       const contract = new ethers.Contract(
         contractAddress,
         PasswordManager.abi,
         provider,
       )
       try {
-        const data0 = await contract.fetchTitle(1)
-        const data1 = await contract.fetchUsername(1)
-        const data2 = await contract.fetchPassword(1)
-        console.log('data0: ', data0)
-        console.log('data1: ', data1)
-        console.log('data2: ', data2)
+        const numberOfEntries = await contract.getNumberOfPasswords()
+        const list = []
+        var id = 0
+        for (var i = 0; i < numberOfEntries; i++) {
+          id++
+          const title = await contract.fetchTitle(i)
+          const username = await contract.fetchUsername(i)
+          const password = await contract.fetchPassword(i)
+          list.push({ id, title, username, password })
+        }
+        setEntries(list)
       } catch (err) {
         console.log('error 😭: ', err)
       }
     }
   }
 
-  async function deletePassword(id) {}
+  React.useEffect(() => fetchPasswords(), [refresh])
 
   return (
     <div>
       <div className="Container-1">
         <div className="col-span-1 m-4">
-          {passwords.map((item, _key) => {
+          {entries.map((item, _key) => {
             return (
               <div
-                onClick={fetchPasswords}
-                // onClick={() => changeVisibility(item.id)}
+                onClick={() => changeVisibility(item.id)}
                 className="DivPointer"
                 key={_key}
               >
