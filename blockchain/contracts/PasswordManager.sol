@@ -23,15 +23,24 @@ contract PasswordManager {
         return passwords.length;
     }
 
+    function fetchTitle(uint _id) public view returns (string memory){
+        return passwords[_id].title;
+    }
+
+    function fetchUsername(uint _id) public view returns (string memory){
+        return passwords[_id].username;
+    }
+
     function fetchPassword(uint _id) public view returns (string memory){
         return passwords[_id].password;
     }
 
-    function setPassword(string memory _password) public {
+    function setPassword(string memory _title, string memory _username, string memory _password) public {
+        console.log(_title, _username, _password);
         PasswordItem memory newPassword; 
         newPassword.id = passwords.length -1;
-        newPassword.title = "Facebook";
-        newPassword.username = "LocalerHost@1337.de";
+        newPassword.title = _title;
+        newPassword.username = _username;
         newPassword.password = _password; 
         passwords.push(newPassword);
     }

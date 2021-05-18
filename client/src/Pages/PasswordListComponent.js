@@ -5,7 +5,7 @@ import PasswordManager from '../artifacts/contracts/PasswordManager.sol/Password
 function PasswordListComponent() {
   // const contractAddress = process.env.REACT_APP_CONTRACTADDRESS
   // console.log(process.env)
-  const contractAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3'
+  const contractAddress = '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0'
   const [password, setPassword] = React.useState('')
   const [passwords, setPasswords] = React.useState([
     { id: 1, title: 'Facebook', username: 'bla@blub.de', password: 'Flasche1' },
@@ -36,10 +36,14 @@ function PasswordListComponent() {
         provider,
       )
       try {
-        const data = await contract.fetchPassword(1)
-        console.log('data: ', data)
+        const data0 = await contract.fetchTitle(1)
+        const data1 = await contract.fetchUsername(1)
+        const data2 = await contract.fetchPassword(1)
+        console.log('data0: ', data0)
+        console.log('data1: ', data1)
+        console.log('data2: ', data2)
       } catch (err) {
-        console.log('error: ', err)
+        console.log('error 😭: ', err)
       }
     }
   }
