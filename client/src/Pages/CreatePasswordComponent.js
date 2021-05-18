@@ -1,66 +1,73 @@
 import * as React from 'react'
-// import { ethers } from "ethers";
+import { ethers } from 'ethers'
+import PasswordManager from '../artifacts/contracts/PasswordManager.sol/PasswordManager.json'
 
 function CreatePasswordComponent() {
-  // const contractAddress = process.env.REACT_APP_CONTRACTADDRESS;
+  const contractAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3'
+  // process.env.REACT_APP_CONTRACTADDRESS
   // console.log(process.env);
 
   const [password, setPassword] = React.useState('')
-  const [passwords, setPasswords] = React.useState([
-    'Facebook',
-    'Instagram',
-    'LinkedIn',
-  ])
-  const [visibility, setVisibility] = React.useState(false)
-  const [buttonText, setButtonText] = React.useState('Show Password')
-  const passwordList = []
-
-  //TODO
-  //Change to specific id!!!
-  function changeVisibility() {
-    if (visibility == false) {
-      setVisibility(true)
-    } else if (visibility == true) {
-      setVisibility(false)
-    }
-  }
+  const [username, setUsername] = React.useState('')
+  const [title, setTitle] = React.useState('')
+  const newPassword = React.useState({ title, username, password })
 
   async function requestAccount() {
     await window.ethereum.request({ method: 'eth_requestAccounts' })
   }
 
-  async function fetchPasswords() {}
-
-  async function createPassword() {}
-
-  async function deletePassword(id) {}
+  async function createPassword() {
+    console.log('create Password called()')
+    if (!password) return
+    if (typeof window.ethereum !== 'undefined') {
+      console.log('made it')
+      await requestAccount()
+      const provider = new ethers.providers.Web3Provider(window.ethereum)
+      console.log({ provider })
+      const signer = provider.getSigner()
+      const contract = new ethers.Contract(
+        contractAddress,
+        PasswordManager.abi,
+        signer,
+      )
+      const transaction = await contract.setPassword(password)
+      // const transaction = await contract.createPassword(title, username, password)
+      await transaction.wait()
+    }
+  }
 
   return (
     <div>
-      <div className="flex mb-4 inset-0 flex items-center justify-center">
-        <div className="flex flex-wrap">
-          <div className="col-span-1 m-4">
-            <form className="bg-white dark:bg-gray-700 shadow-md rounded px-8 pt-6 pb-8 mb-4">
-              <div className="PasswordManager">
-                <div className="mb-4 text-left text-gray-700 dark:text-gray-300">
-                  <label>Titel</label>
-                  <input type="text" className="Input"></input>
-                </div>
-                <div className="mb-4 text-left text-gray-700 dark:text-gray-300">
-                  <label>Username</label>
-                  <input type="text" className="Input"></input>
-                </div>
-                <div className="mb-4 text-left text-gray-700 dark:text-gray-300">
-                  <label>Password</label>
-                  <input type="password" className="Input"></input>
-                </div>
-                <button className="m-4 bg-blue-300 dark:bg-blue-800 hover:bg-blue-400 dark:hover:bg-blue-700 text-white dark:text-gray-200 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                  Save Password
-                </button>
-              </div>
-            </form>
+      <div className="Container-1">
+        <form className="Form">
+          <div className="InputBox">
+            <label>Titel</label>
+            <input
+              // type="text"
+              className="Input"
+              onChange={(e) => setTitle(e.target.value)}
+            ></input>
           </div>
-        </div>
+          <div className="InputBox">
+            <label>Username</label>
+            <input
+              // type="text"
+              className="Input"
+              onChange={(e) => setUsername(e.target.value)}
+            ></input>
+          </div>
+          <div className="InputBox">
+            <label>Password</label>
+            <input
+              // type="password"
+              className="Input"
+              onChange={(e) => setPassword(e.target.value)}
+            ></input>
+          </div>
+        </form>
+        <button onClick={createPassword} className="Button">
+          Save Password
+        </button>
       </div>
     </div>
   )

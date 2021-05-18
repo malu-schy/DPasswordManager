@@ -3,7 +3,7 @@ import Greeter from '../artifacts/contracts/Greeter.sol/Greeter.json'
 import { ethers } from 'ethers'
 
 function Home() {
-  const greeterAddress = '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0'
+  const greeterAddress = '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512'
   const [greeting, setNewGreeting] = useState('')
   const [outputText, setOutputText] = useState('')
 
@@ -33,6 +33,7 @@ function Home() {
   }
 
   async function setGreeting() {
+    console.log('setGreeting called()')
     if (!greeting) return
     if (typeof window.ethereum !== 'undefined') {
       await requestAccount()
@@ -60,7 +61,7 @@ function Home() {
               </h1>
             </div>
             <div className="">
-              <form className="bg-white dark:bg-gray-700 shadow-md rounded px-8 pt-6 pb-8 mb-4">
+              <form className="Form">
                 <div className="Greeter">
                   <div className="mb-4">
                     <input
@@ -69,22 +70,17 @@ function Home() {
                       onChange={(e) => setNewGreeting(e.target.value)}
                     ></input>
                   </div>
-                  <button
-                    className="m-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                    onClick={setGreeting}
-                  >
-                    Save Greeting
-                  </button>
-                  <button
-                    className="m-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                    onClick={getGreeting}
-                  >
-                    Show Greeting
-                  </button>
                 </div>
               </form>
+              <button className="Button" onClick={setGreeting}>
+                {/* <button className="Button" onClick={setGreeting}> */}
+                Save Greeting
+              </button>
+              <button className="Button" onClick={getGreeting}>
+                Show Greeting
+              </button>
             </div>
-            <div>{outputText}</div>
+            <div className="text-white">{outputText}</div>
           </div>
           {/* 3 of 3 Columns  */}
           <div className="w-1/3  h-12"></div>
