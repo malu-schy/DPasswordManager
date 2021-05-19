@@ -1,15 +1,18 @@
 import * as React from 'react'
 import { ethers } from 'ethers'
 import PasswordManager from '../artifacts/contracts/PasswordManager.sol/PasswordManager.json'
+import { Input } from '../components/input'
+import useToastContext from '../hooks/useToastContext'
 
 function CreatePasswordComponent() {
-  const contractAddress = '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0'
+  const contractAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3'
   // process.env.REACT_APP_CONTRACTADDRESS
   // console.log(process.env);
 
   const [password, setPassword] = React.useState('')
   const [username, setUsername] = React.useState('')
   const [title, setTitle] = React.useState('')
+  const addToast = useToastContext()
   // const newPassword = React.useState({ title, username, password })
 
   async function requestAccount() {
@@ -17,6 +20,7 @@ function CreatePasswordComponent() {
   }
 
   async function createPassword() {
+    addToast(title)
     console.log('create Password called()')
     if (!password) return
     if (typeof window.ethereum !== 'undefined') {
@@ -31,7 +35,6 @@ function CreatePasswordComponent() {
         signer,
       )
       const transaction = await contract.setPassword(title, username, password)
-      // const transaction = await contract.createPassword(title, username, password)
       await transaction.wait()
     }
   }
@@ -40,34 +43,20 @@ function CreatePasswordComponent() {
     <div>
       <div className="Container-1">
         <form className="Form">
-          <div className="InputBox">
-            <label>Titel</label>
-            <input
-              // type="text"
-              className="Input"
-              onChange={(e) => setTitle(e.target.value)}
-            ></input>
-          </div>
-          <div className="InputBox">
-            <label>Username</label>
-            <input
-              // type="text"
-              className="Input"
-              onChange={(e) => setUsername(e.target.value)}
-            ></input>
-          </div>
-          <div className="InputBox">
-            <label>Password</label>
-            <input
-              // type="password"
-              className="Input"
-              onChange={(e) => setPassword(e.target.value)}
-            ></input>
-          </div>
+          <Input label="Titel" onChange={(e) => setTitle(e.target.value)} />
+          <Input
+            label="Username"
+            onChange={(e) => setUsername(e.target.value)}
+          />
+          <Input
+            label="Password"
+            type="password"
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <button type="button" onClick={createPassword} className="Button">
+            Save Password
+          </button>
         </form>
-        <button onClick={createPassword} className="Button">
-          Save Password
-        </button>
       </div>
     </div>
   )

@@ -1,7 +1,8 @@
 import './App.css'
-import Home from './Pages/Home'
+// import Home from './Pages/Home'
 import CreatePasswordComponent from './Pages/CreatePasswordComponent'
 import PasswordListComponent from './Pages/PasswordListComponent'
+import { ToastContextProvider } from './context/ToastContext'
 import {
   BrowserRouter as Router,
   Route,
@@ -12,52 +13,58 @@ import {
 function App() {
   return (
     <div className="App">
-      <Router>
-        <div className="navbar">
-          <ul className="flex justify-center py-4">
-            <li className="mr-3">
+      <ToastContextProvider>
+        <Router>
+          <div className="navbar">
+            <ul className="flex justify-center py-4">
+              {/* <li className="mr-3"> */}
               {/* exact vergleicht mit aufgerufenem link */}
-              <NavLink
+              {/* <NavLink
                 activeClassName="activeLink"
                 className="Link"
                 exact
                 to="/"
               >
                 Home Page
-              </NavLink>
-            </li>
-            <li className="mr-3">
-              <NavLink
-                activeClassName="activeLink"
-                className="Link"
-                to="/createpassword"
-                exact
-              >
-                Create A Password
-              </NavLink>
-            </li>
-            <li className="mr-3">
-              <NavLink
-                activeClassName="activeLink"
-                className="Link"
-                to="/passwordlist"
-                exact
-              >
-                Passwordlist
-              </NavLink>
-            </li>
-          </ul>
-        </div>
-        <Switch>
-          <Route path="/" exact component={Home} />
-          <Route
-            path="/createpassword"
-            exact
-            component={CreatePasswordComponent}
-          />
-          <Route path="/passwordlist" exact component={PasswordListComponent} />
-        </Switch>
-      </Router>
+              </NavLink> */}
+              {/* </li> */}
+              <li className="mr-3">
+                <NavLink
+                  activeClassName="activeLink"
+                  className="Link"
+                  to="/createpassword"
+                  exact
+                >
+                  Create A Password
+                </NavLink>
+              </li>
+              <li className="mr-3">
+                <NavLink
+                  activeClassName="activeLink"
+                  className="Link"
+                  to="/passwordlist"
+                  exact
+                >
+                  Your Passwords
+                </NavLink>
+              </li>
+            </ul>
+          </div>
+          <Switch>
+            {/* <Route path="/" exact component={Home} /> */}
+            <Route
+              path="/createpassword"
+              exact
+              component={CreatePasswordComponent}
+            />
+            <Route
+              path="/passwordlist"
+              exact
+              component={PasswordListComponent}
+            />
+          </Switch>
+        </Router>
+      </ToastContextProvider>
     </div>
   )
 }

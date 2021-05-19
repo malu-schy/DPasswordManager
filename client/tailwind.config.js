@@ -6,7 +6,9 @@ module.exports = {
     extend: {},
   },
   variants: {
-    extend: {},
+    extend: {
+      animation: ['motion-reduce'],
+    },
   },
   plugins: [
     require('@tailwindcss/forms'),

@@ -33,3 +33,11 @@
 .DivPointer {
   @apply cursor-pointer flex gap-3 text-left bg-gray-100 dark:bg-gray-700 mb-3 p-5 rounded-3xl text-gray-700 dark:text-gray-300 w-60;
 }
+
+.Alerts {
+  @apply fixed top-4 right-4 animate-bounce motion-reduce:animate-none;
+}
+
+.Alert {
+  @apply bg-green-200 border border-green-400 text-green-700 rounded inset-x-0 bottom-0 relative px-4 py-3 w-96;
+}

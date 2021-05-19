@@ -5,7 +5,7 @@ import PasswordManager from '../artifacts/contracts/PasswordManager.sol/Password
 function PasswordListComponent() {
   // const contractAddress = process.env.REACT_APP_CONTRACTADDRESS
   // console.log(process.env)
-  const contractAddress = '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0'
+  const contractAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3'
 
   const [visibility, setVisibility] = React.useState()
   const [refresh, setRefresh] = React.useState(0)
