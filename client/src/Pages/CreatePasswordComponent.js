@@ -9,18 +9,34 @@ function CreatePasswordComponent() {
   // process.env.REACT_APP_CONTRACTADDRESS
   // console.log(process.env);
 
+  const [masterPassword, setMasterPassword] = React.useState('')
+
   const [password, setPassword] = React.useState('')
   const [username, setUsername] = React.useState('')
   const [title, setTitle] = React.useState('')
   const addToast = useToastContext()
-  // const newPassword = React.useState({ title, username, password })
+
+  var sha256 = require('crypto-js/sha256')
+  // console.log(sha256('Hello'))
+  var CryptoJS = require('crypto-js')
+
+  var privateKey = masterPassword.toString()
+  // Encrypt
+  var ciphertext = CryptoJS.AES.encrypt(password, privateKey).toString()
+  console.log('ciphertext: ' + ciphertext)
+
+  // Decrypt
+  // var bytes = CryptoJS.AES.decrypt(ciphertext.toString(), 'secret key 123')
+  // console.log('bytes ' + bytes)
+  // var plaintext = bytes.toString(CryptoJS.enc.Utf8)
+
+  // console.log(plaintext)
 
   async function requestAccount() {
     await window.ethereum.request({ method: 'eth_requestAccounts' })
   }
 
   async function createPassword() {
-    addToast(title)
     console.log('create Password called()')
     if (!password) return
     if (typeof window.ethereum !== 'undefined') {
@@ -34,8 +50,14 @@ function CreatePasswordComponent() {
         PasswordManager.abi,
         signer,
       )
-      const transaction = await contract.setPassword(title, username, password)
+      const transaction = await contract.setPassword(
+        title,
+        username,
+        ciphertext,
+      )
+      console.log('ciphertext send to bc: ' + ciphertext)
       await transaction.wait()
+      addToast(title)
     }
   }
 
@@ -55,6 +77,21 @@ function CreatePasswordComponent() {
           />
           <button type="button" onClick={createPassword} className="Button">
             Save Password
+          </button>
+        </form>
+        {/* TODO: Modal instead of Form */}
+        <form className="m-3 Form">
+          <Input
+            label="Masterpassword"
+            type="password"
+            onChange={(e) => setMasterPassword(sha256(e.target.value))}
+          ></Input>
+          <button
+            type="button"
+            className="Button"
+            onClick={console.log('My Masterpassword: ' + masterPassword)}
+          >
+            Send Masterpassword
           </button>
         </form>
       </div>

@@ -32,7 +32,7 @@ function App() {
                 <NavLink
                   activeClassName="activeLink"
                   className="Link"
-                  to="/createpassword"
+                  to="/"
                   exact
                 >
                   Create A Password
@@ -52,11 +52,7 @@ function App() {
           </div>
           <Switch>
             {/* <Route path="/" exact component={Home} /> */}
-            <Route
-              path="/createpassword"
-              exact
-              component={CreatePasswordComponent}
-            />
+            <Route path="/" exact component={CreatePasswordComponent} />
             <Route
               path="/passwordlist"
               exact

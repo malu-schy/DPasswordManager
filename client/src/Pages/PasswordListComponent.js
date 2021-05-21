@@ -1,15 +1,35 @@
 import * as React from 'react'
 import { ethers } from 'ethers'
 import PasswordManager from '../artifacts/contracts/PasswordManager.sol/PasswordManager.json'
+import { Input } from '../components/input'
 
 function PasswordListComponent() {
   // const contractAddress = process.env.REACT_APP_CONTRACTADDRESS
   // console.log(process.env)
   const contractAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3'
-
+  const [masterPassword, setMasterPassword] = React.useState('')
+  const [ciphertext, setCiphertext] = React.useState('')
+  const [plaintext, setPlainText] = React.useState('')
   const [visibility, setVisibility] = React.useState()
   const [refresh, setRefresh] = React.useState(0)
   const [entries, setEntries] = React.useState([])
+
+  var sha256 = require('crypto-js/sha256')
+  var CryptoJS = require('crypto-js')
+
+  function decryptPassword(password) {
+    console.log('password in function decryptPassword' + password)
+    var bytes = CryptoJS.AES.decrypt(
+      password.toString(),
+      masterPassword.toString(),
+    )
+    console.log('bytes ' + bytes)
+    var plaintext = bytes.toString(CryptoJS.enc.Utf8)
+
+    console.log(plaintext)
+    return plaintext
+  }
+
   function changeVisibility(id) {
     visibility === id ? setVisibility(null) : setVisibility(id)
   }
@@ -45,6 +65,22 @@ function PasswordListComponent() {
   return (
     <div>
       <div className="Container-1">
+        <form className="m-3 Form">
+          <Input
+            label="Masterpassword"
+            type="password"
+            onChange={(e) =>
+              setMasterPassword(sha256(e.target.value).toString())
+            }
+          ></Input>
+          <button
+            type="button"
+            className="Button"
+            onClick={console.log('My Masterpassword: ' + masterPassword)}
+          >
+            Send Masterpassword
+          </button>
+        </form>
         <div className="col-span-1 m-4">
           {entries.map((item, _key) => {
             return (
@@ -98,11 +134,14 @@ function PasswordListComponent() {
                   </p>
                   <p className="text-xs mt-1">
                     {visibility === item.id
-                      ? JSON.stringify(item.password).replace(
-                          /^"(.+(?="$))"$/,
-                          '$1',
-                        )
-                      : '••••••'}
+                      ? decryptPassword(item.password)
+                      : // decryptPassword(item.password)
+                        // JSON.stringify(item.password).replace(
+                        //   /^"(.+(?="$))"$/,
+                        //   '$1',
+                        // ),
+                        // )
+                        '••••••'}
                   </p>
                 </div>
               </div>
