@@ -18,7 +18,7 @@ contract PasswordManager {
         console.log("Successfully deployed PasswordManager-Contract");
         passwords.push(PasswordItem(0, "Facebook", "bla@blub,de", "Flasche1"));
     }
-
+ 
     function getNumberOfPasswords() public view returns(uint) {
         return passwords.length;
     }

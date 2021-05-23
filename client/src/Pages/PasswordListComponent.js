@@ -3,6 +3,10 @@ import { ethers } from 'ethers'
 import PasswordManager from '../artifacts/contracts/PasswordManager.sol/PasswordManager.json'
 import { Input } from '../components/input'
 
+// TODO:
+// -Errormessage if key do not work to encrypt
+// -if masterpassword empty -> Error Message
+
 function PasswordListComponent() {
   // const contractAddress = process.env.REACT_APP_CONTRACTADDRESS
   // console.log(process.env)
@@ -122,13 +126,7 @@ function PasswordListComponent() {
                   <p className="text-xs mt-1">
                     {visibility === item.id
                       ? decryptPassword(item.password)
-                      : // decryptPassword(item.password)
-                        // JSON.stringify(item.password).replace(
-                        //   /^"(.+(?="$))"$/,
-                        //   '$1',
-                        // ),
-                        // )
-                        '••••••'}
+                      : '••••••'}
                   </p>
                 </div>
               </div>
