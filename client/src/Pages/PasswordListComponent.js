@@ -2,6 +2,7 @@ import * as React from 'react'
 import { ethers } from 'ethers'
 import PasswordManager from '../artifacts/contracts/PasswordManager.sol/PasswordManager.json'
 import { Input } from '../components/input'
+// import Web3 from 'web3'
 
 // TODO:
 // -Errormessage if key do not work to encrypt
@@ -19,13 +20,28 @@ function PasswordListComponent() {
   var sha256 = require('crypto-js/sha256')
   var CryptoJS = require('crypto-js')
 
+  const ownerAddress = '0xdF3e18d64BC6A983f673Ab319CCaE4f1a57C7097'
+  // const [currentUser, setCurrentUser] = React.useState('')
+
+  async function getOwner() {
+    if (typeof window.ethereum !== 'undefined') {
+      // const provider = new ethers.providers.Web3Provider(window.ethereum)
+      // const accounts = ethers.utils.getJsonWalletAddress()
+      // console.log('Owner' + accounts)
+    }
+  }
+
   function decryptPassword(password) {
     var bytes = CryptoJS.AES.decrypt(
       password.toString(),
       masterPassword.toString(),
     )
-    var plaintext = bytes.toString(CryptoJS.enc.Utf8)
-    return plaintext
+    try {
+      var plaintext = bytes.toString(CryptoJS.enc.Utf8)
+      return plaintext
+    } catch {
+      return 0
+    }
   }
 
   function changeVisibility(id) {
@@ -33,6 +49,7 @@ function PasswordListComponent() {
   }
 
   async function fetchPasswords() {
+    getOwner()
     if (typeof window.ethereum !== 'undefined') {
       const provider = new ethers.providers.Web3Provider(window.ethereum)
       const contract = new ethers.Contract(
@@ -41,16 +58,26 @@ function PasswordListComponent() {
         provider,
       )
       try {
-        const numberOfEntries = await contract.getNumberOfPasswords()
+        const passwordsOfOwner = []
+        const testPasswordOfOwner = await contract.getPasswordsByOwner(
+          ownerAddress,
+        )
+        passwordsOfOwner.push(testPasswordOfOwner)
+        console.log('Passwords of Owner: ' + passwordsOfOwner)
         const list = []
-        var id = 0
-        for (var i = 0; i < numberOfEntries; i++) {
-          id++
-          const title = await contract.fetchTitle(i)
-          const username = await contract.fetchUsername(i)
-          const password = await contract.fetchPassword(i)
-          list.push({ id, title, username, password })
-        }
+
+        await Promise.all(
+          testPasswordOfOwner.map(async (element) => {
+            const title = await contract.fetchTitle(element)
+            console.log(title)
+            const username = await contract.fetchUsername(element)
+            console.log(username)
+            const password = await contract.fetchPassword(element)
+            console.log(password)
+            list.push({ id: element, title, username, password })
+          }),
+        )
+        console.log(list)
         setEntries(list)
       } catch (err) {
         console.log('error 😭: ', err)
